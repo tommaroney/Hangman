@@ -1,0 +1,35 @@
+@import url('https://fonts.googleapis.com/css?family=Ewert|Indie+Flower|Smokum');
+
+/* font-family: 'Holtwood One SC', serif;
+font-family: 'Ewert', cursive;
+font-family: 'Smokum', cursive; 
+font-family: 'Indie Flower', cursive;*/
+
+
+section.mycontainer {
+    height: 85%;
+}
+
+body {
+    background-image: url(../images/western.jpg);
+}
+
+.western {
+    font-family: 'Smokum', cursive;
+    font-size: 100px;
+}
+
+#vanish {
+    margin: 150px auto 0 auto;
+    font-family: 'Indie Flower', cursive;
+    font-size: 20px;
+}
+
+#currentState {
+    font-family: 'Indie Flower', cursive;
+}
+
+#main-container {
+    opacity: 0.95;
+    filter: alpha(opacity=95); /* For IE8 and earlier */
+}
