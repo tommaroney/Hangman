@@ -1,3 +1,8 @@
+    var theme = new Audio("assets/sounds/theme.mp3");
+    theme.preload = ""
+    var gasp = new Audio("assets/sounds/gasp.wav");
+    var applause = new Audio("assets/sounds/applause.mp3");
+    var endAudio = new Audio("assets/sounds/endGame.mp3");
 
     var currentGuess;
     var answer = '';
@@ -16,7 +21,7 @@
         fillArray(filmQuiz, words);
     }
     var cState = "";
-    var letters = /^[A-Za-z]+$/;
+    // var letters = ;
 
     function fillArray(jsonObj, array) {
         for(var i = 0; i < jsonObj.results.length; i++) {
@@ -39,15 +44,15 @@ $(document).ready(function() {
     var wCount = $("#win-count");
     var lCount = $("#loss-count");
     
-    
-    var theme = new Audio("assets/sounds/theme.mp3");
-    var gasp = new Audio("assets/sounds/gasp.wav");
-    var applause = new Audio("assets/sounds/applause.mp3");
-    
     console.log(theme);
-    theme.play();
-    
+
+    // setTimeout(function() {theme.play()}, 300);
+    theme.onloadeddata = (function (event) {
+        theme.play();
+    });
+
     startButton.on("click", function (event) {
+        theme.pause();
         console.log(words);
         ansPos = Math.floor(Math.random() * words.length);
         answer = words[ansPos];
@@ -66,15 +71,20 @@ $(document).ready(function() {
         currentState.text(cState);
         doc.on("keyup", function (event) {
             currentGuess = event.key;
-            if(currentGuess.match(letters) && currentGuess.length === 1 && !isGuessed(currentGuess)) {
+            if(currentGuess.match(/^[A-Za-z]+$/) && currentGuess.length === 1 && !isGuessed(currentGuess)) {
                 findInWord(currentGuess.toLowerCase());
             }
         });
     });
 
     function endGame() {
+        endAudio.play();
         response = confirm("Play again?");
         if(response) {
+            endAudio.load();
+            endAudio.pause();
+            theme.load();
+            theme.play();
             words.splice(ansPos, 1);
             currentState.empty();
             missedGuesses.empty();
