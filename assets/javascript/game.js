@@ -21,7 +21,6 @@
         fillArray(filmQuiz, words);
     }
     var cState = "";
-    // var letters = ;
 
     function fillArray(jsonObj, array) {
         for(var i = 0; i < jsonObj.results.length; i++) {
@@ -43,7 +42,6 @@ this.onload = function() {
     var wCount = document.getElementById("win-count");
     var lCount = document.getElementById("loss-count");
 
-    // setTimeout(function() {theme.play()}, 300);
     theme.play();
 
     startButton.onclick = function (event) {
