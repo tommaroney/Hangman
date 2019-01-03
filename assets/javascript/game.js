@@ -32,35 +32,31 @@
         }
     }
     
-$(document).ready(function() {
+this.onload = function() {
     
-    var startButton = $("#start");
-    var currentState = $("#currentState");
-    var missedGuesses = $("#missedGuesses");
-    var image = $("#gallows");
-    var rGuesses = $("#remaining-guesses");
-    var mainC = $("#tracking");
-    var doc = $(document);
-    var wCount = $("#win-count");
-    var lCount = $("#loss-count");
-    
-    console.log(theme);
+    var startButton = document.getElementById("start");
+    var currentState = document.getElementById("currentState");
+    var missedGuesses = document.getElementById("missedGuesses");
+    var image = document.getElementById("gallows");
+    var rGuesses = document.getElementById("remaining-guesses");
+    var mainC = document.getElementById("tracking");
+    var wCount = document.getElementById("win-count");
+    var lCount = document.getElementById("loss-count");
 
     // setTimeout(function() {theme.play()}, 300);
-    theme.onloadeddata = (function (event) {
-        theme.play();
-    });
+    theme.play();
 
-    startButton.on("click", function (event) {
+    startButton.onclick = function (event) {
         theme.pause();
-        console.log(words);
-        ansPos = Math.floor(Math.random() * words.length);
-        answer = words[ansPos];
-        console.log(answer);
-        image.attr("src", "assets/images/gallowsInit.png");
-        startButton.attr("hidden", "true");
-        $("#vanish").attr("hidden", "true");
-        $(".visOnStart").attr("hidden", false);
+        answer = words[Math.floor(Math.random() * words.length)];
+        image.src = "assets/images/gallowsInit.png";
+        startButton.hidden = true;
+        let gone = document.getElementById("vanish")
+        gone.hidden = true;
+        let seen = document.getElementsByClassName("visOnStart");
+        for(let i = 0; i < seen.length; i++) {
+            seen[i].hidden = false;
+        }
         for(var i = 0; i < answer.length; i++) {
             if(answer.charAt(i) == ' ') {
                 cState += ' ';
@@ -68,14 +64,14 @@ $(document).ready(function() {
             }
             cState += '-';
         }
-        currentState.text(cState);
-        doc.on("keyup", function (event) {
+        currentState.innerText = cState;
+        document.onkeyup = function (event) {
             currentGuess = event.key;
             if(currentGuess.match(/^[A-Za-z]+$/) && currentGuess.length === 1 && !isGuessed(currentGuess)) {
                 findInWord(currentGuess.toLowerCase());
             }
-        });
-    });
+        }
+    }
 
     function endGame() {
         endAudio.play();
@@ -86,15 +82,15 @@ $(document).ready(function() {
             theme.load();
             theme.play();
             words.splice(ansPos, 1);
-            currentState.empty();
-            missedGuesses.empty();
-            mainC.append(startButton);
-            startButton.attr("hidden", false);
+            currentState.innerHTML = '';
+            missedGuesses.innerHTML = '';
+            mainC.appendChild(startButton);
+            startButton.hidden = false;
             mGuessCount = 0;
             answer = '';
             cState = '';
             guesses = '';
-            rGuesses.text("7");
+            rGuesses.innerText = "7";
         }
     }
 
@@ -104,7 +100,7 @@ $(document).ready(function() {
                 applause.play();
                 cState = cState.slice(0, i) + answer.charAt(i) + cState.slice(i + 1);
                 guesses += guess;
-                currentState.text(cState);
+                currentState.innerText = cState;
                 isWin();
             }
         }
@@ -112,9 +108,12 @@ $(document).ready(function() {
         if(!answer.toLowerCase().includes(guess)) {
             guesses += guess;
             gasp.play();
-            missedGuesses.append($("<span class='badge badge-danger mr-1 ml-1'>" + guess + "</span>"));
-            rGuesses.text(7 - ++mGuessCount);
-            image.attr("src", "assets/images/gallows" + (-1 + mGuessCount) + ".png");
+            let newGuess = document.createElement("span");
+            newGuess.classList = 'badge badge-danger mr-1 ml-1';
+            newGuess.innerText = guess;
+            missedGuesses.appendChild(newGuess);
+            rGuesses.innerText = (7 - ++mGuessCount);
+            image.src = ("assets/images/gallows" + (-1 + mGuessCount) + ".png");
             isHung();
         }
     }
@@ -130,21 +129,28 @@ $(document).ready(function() {
     
     function isHung() {
         if(mGuessCount >= 7) {
-            currentState.text(answer).append($("<h1 class='display-1'>You lost!</h1>"));
-            doc.off("keyup");
+            currentState.innerText = answer;
+            let lostElem = document.createElement("h1");
+            lostElem.classList ='display-1';
+            lostElem.innerText = "You lost!";
+            currentState.appendChild(lostElem);
+            document.onkeyup = function() {};
             setTimeout(endGame, 100);
-            var inc = parseInt(lCount.text()) + 1;
-            lCount.text(inc);
+            var inc = parseInt(lCount.innerText) + 1;
+            lCount.innerText = inc;
         }
     }
 
     function isWin() {
         if(answer === cState) {
-            currentState.append($("<h1 class='display-1'>You won!</h1>"));
-            doc.off("keyup");
+            let wonElem = document.createElement("h1");
+            wonElem.class ='display-1';
+            wonElem.innerText = "You won!";
+            currentState.append(wonElem);
+            document.onkeyup = function() {};
             setTimeout(endGame, 100);
-            var inc = parseInt(wCount.text()) + 1;
-            wCount.text(inc);
+            var inc = parseInt(wCount.innerText) + 1;
+            wCount.innerText = inc;
         }
     }
-});
+}
